@@ -1,0 +1,25 @@
+{
+  "name": "mystore",
+  "version": "1.0.0",
+  "description": "Ecomm site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Swapnil-Bhabal/MyStore.git"
+  },
+  "keywords": [
+    "MyStore"
+  ],
+  "author": "Swapnil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Swapnil-Bhabal/MyStore/issues"
+  },
+  "homepage": "https://github.com/Swapnil-Bhabal/MyStore#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
