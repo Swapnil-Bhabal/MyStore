@@ -1,8 +1,21 @@
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import { Heading, Grid } from "@chakra-ui/layout";
 import Product from "../components/Product";
-import products from '../products';
+
 
 const HomeScreen = () => {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const { data } = await axios.get('/api/products');
+            setProducts(data);
+        };
+
+        fetchProducts();
+    }, []);
+
     return (
         <>
         <Heading as="h2" mb="8" fontSize="3xl">
