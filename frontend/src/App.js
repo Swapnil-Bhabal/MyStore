@@ -17,7 +17,7 @@ const App = () => {
         px="6"
         bgColor="gray.200">
         <Route path="/" exact component={HomeScreen}/>
-        <Router path="/product/:id" component={ProductScreen}/>
+        <Route path="/product/:id" component={ProductScreen}/>
         </Flex>
         <Footer/>
         </Router>
