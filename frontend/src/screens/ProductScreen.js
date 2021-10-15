@@ -1,22 +1,24 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink} from 'react-router-dom';
 import { Flex, Grid, Image, Heading, Text, Button, Divider,} from '@chakra-ui/react';
+
 import Rating from '../components/Rating';
+import { listProductDetails } from '../actions/productActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 
 
 const ProductScreen = ({ match }) => {
-    const [product, setProduct] = useState({});
+    const dispatch = useDispatch();
+
+    const productDetails = useSelector((state) => state.productDetails);
+    const { loading, product, error } = productDetails;
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            const { data } = await axios.get(`/api/products/${match.params.id}`);
-            setProduct(data);
-        };
-
-        fetchProduct();
-    }, []);
+        dispatch(listProductDetails(match.params.id))
+    }, [dispatch, match]);
 
     return (
         <>
@@ -25,6 +27,11 @@ const ProductScreen = ({ match }) => {
         Go Back
         </Button>
         </Flex>
+        {loading ? (
+            <Loader/>
+        ) : error ? (
+            <Message type="error">{error}</Message>
+        ) : (
         <Grid templateColumns="5fr 4fr 3fr" gap="10">
         <Image src={product.image} alt={product.name} borderRadius="md"/>
 
@@ -74,6 +81,7 @@ const ProductScreen = ({ match }) => {
         </Button>
         </Flex>
         </Grid>
+        )}
         </>
     );
 };
