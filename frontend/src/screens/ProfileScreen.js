@@ -1,23 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   Flex,
   Heading,
-  Text,
   FormControl,
   FormLabel,
   Input,
-  Link,
   Spacer,
   Grid,
 } from '@chakra-ui/react';
 
 import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
-import { getUserDetails } from '../actions/userActions';
-import { userDetailsReducer } from '../reducers/userReducer';
+import { getUserDetails, updateUserProfile } from '../actions/userActions';
 
 const ProfileScreen = ({ history }) => {
     const [name, setName] = useState('');
@@ -33,6 +29,9 @@ const ProfileScreen = ({ history }) => {
 
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
+
+    const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+    const { success } = userUpdateProfile;
 
     useEffect(() => {
         if (!userInfo) {
@@ -52,7 +51,7 @@ const ProfileScreen = ({ history }) => {
         if (password !== confirmPassword ) {
             setMessage('Password do not match');
         } else { 
-
+            dispatch(updateUserProfile({ id: user._id, name, email, password }));
         }
     };
 
@@ -65,6 +64,7 @@ const ProfileScreen = ({ history }) => {
             </Heading>
             {error && <Message type="error">{error}</Message>}
             {message && <Message type="error">{message}</Message>}
+            {success && <Message type="success">Profile Updated</Message>}
 
             <form onSubmit={submitHandler}>
             <FormControl id="name">

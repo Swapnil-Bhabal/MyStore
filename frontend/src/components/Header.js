@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { Flex, Heading, Link, Box, Icon, Menu, MenuButton, MenuList, MenuItem, Button } from '@chakra-ui/react';
 import { HiShoppingBag, HiUser, HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { IoChevronDown } from 'react-icons/io5';
