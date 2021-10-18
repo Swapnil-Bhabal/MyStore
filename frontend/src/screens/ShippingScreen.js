@@ -12,12 +12,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import FormContainer from '../components/FormContainer';
 import { saveShippingAddress } from '../actions/cartActions';
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const ShippingScreen = ({ history }) => {
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [country, setCountry] = useState('');
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
+
+  const [address, setAddress] = useState(shippingAddress.address || '');
+  const [city, setCity] = useState(shippingAddress.city || '');
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress.postalCode || ''
+  );
+  const [country, setCountry] = useState(shippingAddress.country || '');
 
   const dispatch = useDispatch();
   
@@ -30,6 +36,7 @@ const ShippingScreen = ({ history }) => {
   return (
     <Flex w="full" alignItems="center" justifyContent="center" py="5">
     <FormContainer>
+    <CheckoutSteps step1 step2/>
     <Heading as="h1" mb="8" fontSize="3xl">
     Shipping
     </Heading>
