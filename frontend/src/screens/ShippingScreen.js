@@ -26,31 +26,32 @@ const ShippingScreen = ({ history }) => {
   const [country, setCountry] = useState(shippingAddress.country || '');
 
   const dispatch = useDispatch();
-  
+
   const submitHandler = (e) => {
-      e.preventDefault();
-      dispatch(saveShippingAddress({ address, city, postalCode, country }));
-      history.push('/payment');
+    e.preventDefault();
+    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+    history.push('/payment');
   };
 
   return (
     <Flex w="full" alignItems="center" justifyContent="center" py="5">
-    <FormContainer>
-    <CheckoutSteps step1 step2/>
-    <Heading as="h1" mb="8" fontSize="3xl">
-    Shipping
-    </Heading>
-    <form onSubmit={submitHandler}>
-    
-    <FormControl id="Address" isRequired>
-        <FormLabel>Address</FormLabel>
-        <Input
-            type="text"
-            placeholder="Enter Address"
-            value={address}
-            onChange={ (e) => setAddress(e.target.value)}/>
-    </FormControl>
-    <Spacer h="3" />
+      <FormContainer>
+        <CheckoutSteps step1 step2 />
+        <Heading as="h1" mb="8" fontSize="3xl">
+          Shipping
+        </Heading>
+        <form onSubmit={submitHandler}>
+          {/* Address */}
+          <FormControl id="Address" isRequired>
+            <FormLabel>Address</FormLabel>
+            <Input
+              type="text"
+              placeholder="Enter Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </FormControl>
+          <Spacer h="3" />
           {/* City */}
           <FormControl id="city" isRequired>
             <FormLabel>City</FormLabel>
@@ -88,10 +89,10 @@ const ShippingScreen = ({ history }) => {
           <Button type="submit" mt="4" colorScheme="teal">
             Continue
           </Button>
-    </form>
-    </FormContainer>
+        </form>
+      </FormContainer>
     </Flex>
-   );
+  );
 };
 
 export default ShippingScreen;
