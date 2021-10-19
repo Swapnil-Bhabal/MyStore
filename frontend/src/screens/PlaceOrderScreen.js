@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Button,
@@ -13,8 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Message from '../components/Message';
 import CheckoutSteps from '../components/CheckoutSteps';
+import { createOrder } from '../actions/orderActions';
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
     const cart = useSelector((state) => state.cart);
 
     cart.itemsPrice = cart.cartItems.reduce(
@@ -24,9 +26,30 @@ const PlaceOrderScreen = () => {
     cart.taxPrice = (12 * cart.itemsPrice) / 100;
     cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
+    const dispatch = useDispatch();
+
+    const orderCreate = useSelector((state) => state.orderCreate);
+    const { order, success, error } = orderCreate;
+
     const placeOrderHandler = () => {
-        console.log('ORDER');
+        dispatch(
+            createOrder({
+                orderItems: cart.orderItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: cart.itemsPrice,
+                shippingPrice: cart.shippingPrice,
+                taxPrice: cart.taxPrice,
+                totalPrice: cart.totalPrice,
+            })
+        );
     };
+
+    useEffect(() => {
+        if (success) {
+            history.push(`/order/${order._id}`);
+        }
+    },[history, success]);
 
     return (
         <Flex w="full" py="5" direction="column">
@@ -152,7 +175,7 @@ const PlaceOrderScreen = () => {
             </Flex>
         </Box>
         
-        
+        {error && <Message type="error">{error}</Message>}
 
         <Button
             size="lg"
