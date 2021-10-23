@@ -24,7 +24,7 @@ const App = () => {
         py="6"
         px="6"
         bgColor="gray.200">
-        <Route path="/order" component={OrderScreen}/>
+        <Route path="/order/:id" component={OrderScreen}/>
         <Route path="/placeorder" component={PlaceOrderScreen}/>
         <Route path="/payment" component={PaymentScreen}/>
         <Route path="/shipping" component={ShippingScreen}/>
