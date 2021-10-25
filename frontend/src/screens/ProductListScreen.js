@@ -22,7 +22,7 @@ import {
 
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { listProducts } from '../actions/productActions';
+import { listProducts, deleteProduct, } from '../actions/productActions';
 
 const ProductListScreen = ({ history }) => {
     const dispatch = useDispatch();
@@ -33,17 +33,24 @@ const ProductListScreen = ({ history }) => {
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
 
+    const productDelete = useSelector((state) => state.productDelete);
+    const {
+        loading: loadingDelete,
+        error: errorDelete,
+        success: successDelete,
+    } = productDelete;
+
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
             dispatch(listProducts());
         } else {
             history.push('/login');
         }
-    }, [dispatch, history, userInfo]);
+    }, [dispatch, history, userInfo, successDelete]);
 
     const deleteHandler = (id) => {
         if (window.confirm('Are you sure?')) {
-
+            dispatch(deleteProduct(id));
         }
     };
 
@@ -62,6 +69,8 @@ const ProductListScreen = ({ history }) => {
                 Create Product
             </Button>
             </Flex>
+            {loadingDelete && <Loader/>}
+            {errorDelete && <Message type="error">{errorDelete}</Message>}
             {loading ? (
                 <Loader/>
             ) : error ? (

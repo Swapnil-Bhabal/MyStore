@@ -1,3 +1,4 @@
+import e from 'express';
 import asyncHandler from 'express-async-handler';
 
 import Product from '../models/productModel.js';
@@ -18,4 +19,16 @@ const getProductsbyId = asyncHandler(async (req, res) => {
     }
 });
 
-export { getProducts, getProductsbyId };
+const deleteProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        await product.remove();
+        res.json({ message: 'Product removed' });
+    } else {
+        res.status(404);
+        throw new Error('Product not found');
+    }
+});
+
+export { getProducts, getProductsbyId, deleteProduct };
