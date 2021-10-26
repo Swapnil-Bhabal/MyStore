@@ -11,7 +11,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import {
   notFound,
   errorHandler,
-} from './middlewares/errorMiddleware.js';
+} from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
