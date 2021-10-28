@@ -78,7 +78,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
 });
 
-const createdProductReview = asyncHandler(async (req, res) => {
+const createProductReview = asyncHandler(async (req, res) => {
     const { rating, comment } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -100,11 +100,11 @@ const createdProductReview = asyncHandler(async (req, res) => {
             user: req.user._id,
         };
 
-        products.reviews.push(review);
-        product.numReviews = product.review.length;
+        product.reviews.push(review);
+        product.numReviews = product.reviews.length;
 
         product.rating = 
-            product.reviews.reduc(
+            product.reviews.reduce(
                 (acc, currItem) => currItem.rating + acc,
                 0
             ) / product.reviews.length;
@@ -117,4 +117,4 @@ const createdProductReview = asyncHandler(async (req, res) => {
     }
 });
 
-export { getProducts, getProductsbyId, deleteProduct, createProduct, updateProduct, createdProductReview, };
+export { getProducts, getProductsbyId, deleteProduct, createProduct, updateProduct, createProductReview, };

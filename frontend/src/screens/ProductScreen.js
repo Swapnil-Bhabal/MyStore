@@ -1,30 +1,54 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink} from 'react-router-dom';
-import { Flex, Grid, Image, Heading, Text, Button, Divider, Select} from '@chakra-ui/react';
+import { Flex, Grid, Image, Heading, Text, Button, Divider, Select, Box, Link, FormControl, FormLabel, Textarea,} from '@chakra-ui/react';
 
 import Rating from '../components/Rating';
-import { listProductDetails } from '../actions/productActions';
+import { listProductDetails, createProductReview } from '../actions/productActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
+
 
 
 
 const ProductScreen = ({ match, history }) => {
     const [qty, setQty] = useState(1);
 
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+
     const dispatch = useDispatch();
 
     const productDetails = useSelector((state) => state.productDetails);
     const { loading, product, error } = productDetails;
 
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
+
+    const productReviewCreate = useSelector((state) => state.productReviewCreate);
+    const { success: successProductReview, error: errorProductReview } = productReviewCreate;
+
     useEffect(() => {
+        if (successProductReview) {
+            alert('Review Submitted');
+            setRating(0);
+            setComment('');
+            dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
+        }
         dispatch(listProductDetails(match.params.id))
-    }, [dispatch, match]);
+    }, [dispatch, match, successProductReview]);
 
     const addToCartHandler = () => {
         history.push(`/cart/${match.params.id}?qty=${qty}`);
     };
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        dispatch(
+            createProductReview(match.params.id, { rating, comment })
+        );
+    }
 
     return (
         <>
@@ -38,6 +62,7 @@ const ProductScreen = ({ match, history }) => {
         ) : error ? (
             <Message type="error">{error}</Message>
         ) : (
+        <>
         <Grid templateColumns="5fr 4fr 3fr" gap="10">
         <Image src={product.image} alt={product.name} borderRadius="md"/>
 
@@ -104,6 +129,84 @@ const ProductScreen = ({ match, history }) => {
         </Button>
         </Flex>
         </Grid>
+        <Box mt="10">
+            <Box>
+                <Heading as="h2" size="xl" mb="4">
+                    Reviews
+                </Heading>
+                {product.reviews.length === 0 && (
+                    <Message>No reviews</Message>
+                )}
+                <Box p="4" bgColor="white" rounded="md" mb="1">
+                    {product.reviews.map((review) => (
+                        <Flex direction="column" key={review._id} mb="5">
+                            <Flex justifyContent="space-between">
+                                <Text fontSize="lg">
+                                    <strong>{review.name}</strong> on{' '}
+                                    {review.createdAt.substring(0, 10)}
+                                </Text>
+                                <Rating value={review.rating}/>
+                            </Flex>
+                            <Text mt="2">{review.comment}</Text>
+                        </Flex>
+                    ))}
+                </Box>
+                <Box
+                    p="10"
+                    bgColor="white"
+                    rounded="white"
+                    mt="10"
+                    border="2px"
+                    borderColor="gray.300"
+                >
+                    <Heading as="h3" size="lg" mb="6">
+                        Write a review
+                    </Heading>
+                    {errorProductReview && (
+                        <Message type="error">{errorProductReview}</Message>
+                    )}
+                    {userInfo ? (
+                        <form onSubmit={submitHandler}>
+                            <FormControl id="rating" mb="3">
+                                <FormLabel>Rating</FormLabel>
+                                <Select
+                                    placeholder="select option"
+                                    value={rating}
+                                    onChange={(e) => setRating(e.target.value)}
+                                >
+                                    <option>Select...</option>
+                                    <option value="1">1 - Poor</option>
+                                    <option value="2">2 - Okay</option>
+                                    <option value="3">3 - Good</option>
+                                    <option value="4">4 - Very Good</option>
+                                    <option value="5">5 - Excellent</option>
+                                </Select>
+                            </FormControl>
+                            <FormControl id="comment" mb="3">
+                                <FormLabel>Comment</FormLabel>
+                                <Textarea
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                >
+                                </Textarea>
+                            </FormControl>
+                            <Button colorScheme="teal" type="submit">
+                            Post Review
+                            </Button>
+                        </form>
+                    ) : (
+                        <Message>
+                            Please{' '}
+                            <Link as={RouterLink} tp="/login">
+                                log in
+                            </Link>{' '}
+                            to write a review
+                        </Message>
+                    )}
+                </Box>
+        </Box>
+        </Box>
+        </>
         )}
         </>
     );

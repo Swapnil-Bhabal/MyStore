@@ -18,7 +18,11 @@ const reviewSchema = mongoose.Schema({
         required: true,
         ref: 'User',
     },
-});
+},
+{
+    timestamps: true,
+}
+);
 
 const productSchema = mongoose.Schema({
         user: {
